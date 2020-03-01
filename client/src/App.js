@@ -2,11 +2,17 @@ import React, { Component } from "react";
 import UniFi from "./contracts/Unifi.json";
 import Button from '@material-ui/core/Button';
 import getWeb3 from "./getWeb3";
+import Logo from "./logo.png";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import "./App.css";
 
+
+
 class App extends Component {
   state = { storageValue: 0, web3: null, accounts: null, contract: null };
+
+  // styledbutton = styled.Button`background-color`;
 
   img_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQzSq8VnVHZw7-8Cn7YXQKCQpDXinPEaEucFrySgMi4dk88qaFQ";
   
@@ -51,20 +57,28 @@ class App extends Component {
     // this.setState({ storageValue: response });
   };
 
+
+  // Login function from contract
+  Login() {
+    const { accounts, contract } = this.state;
+    contract.methods.login().send({
+      from: accounts[0]
+    });
+  }
+  
+
   render() {
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
       <div className="App">
-        <img src={this.img_url} />
+        <img src={Logo} width="30%"/>
+        <br/>
         <div>
-        <Button variant="contained" color="primary">
-        Login
-        </Button>
-        <Button variant="contained" color="secondary">
-          Register
-        </Button>
+          <Button onClick={this.Login.bind(this)} variant="contained" color="primary">
+          Login
+          </Button>
         </div>
       </div>
     );

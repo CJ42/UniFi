@@ -28,7 +28,7 @@ contract UniFi {
     }
     
     mapping(address => Host) host_array;
-    mapping(address => User) user_array;
+    mapping(address => User) public user_array;
     mapping(address => uint) pendingWithdrawals;
     
     constructor() public {
@@ -44,12 +44,20 @@ contract UniFi {
         require(user_array[user].is_connected == false);
         _;
     }
+
+
+    /// Get user balance
+    /// @return the user balance
+    function getUserBalance() public view returns(uint) {
+        return user_array[msg.sender].balance;
+    }
     
     /// @param _longitude wifi longitude (geolocation)
     /// @param _latitude wifi latitude (geolocation)
     /// @param _ssid SSID of the wifi host
     /// @param _mac_address Mac Address
-    function registerHost(uint256 _longitude,
+    function registerHost(
+        uint256 _longitude,
         uint256 _latitude,
         uint256 _base_fee,
         string memory _ssid,
@@ -92,6 +100,8 @@ contract UniFi {
         user_array[user].is_connected = false;
     }
     
+
+    /// @notice you are about to top up your balance
     function deposit() public payable {
         user_array[msg.sender].balance += msg.value;
     }
